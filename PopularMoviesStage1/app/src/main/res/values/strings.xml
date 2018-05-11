@@ -8,4 +8,5 @@
     <string name="original_title">Original Title:</string>
     <string name="popular_movies">Popular movies</string>
     <string name="top_movies">Top rated movies</string>
+    <string name="something_wrong">Something went wrong...Please try later!</string>
 </resources>

@@ -18,6 +18,9 @@ import com.sm.popularmovies_stage1.model.Movies;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+/**
+ * Details view page, to display movie details.
+ */
 public class MovieDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_MOVIE = "extra_movie";
@@ -40,6 +43,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             closeOnError();
         }
 
+        // get parcelable data from intent.
         Movies userElectedMovie = (Movies) intent.getParcelableExtra(EXTRA_MOVIE);
         if (userElectedMovie == null) {
             // EXTRA_POSITION not found in intent
@@ -47,6 +51,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             return;
         }
 
+        // initiate resources.
         populateUI(userElectedMovie);
         Picasso.with(this)
                 .load(getPath(userElectedMovie.getmPosterPath()))
@@ -76,6 +81,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
+    // Prepares poster url.
     private String getPath(String posterPath) {
         String url = "http://image.tmdb.org/t/p/" + "w500/" + posterPath;
         return url;
@@ -117,5 +123,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         } else {
             movieOverview.setText(NA);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // relase all resources.
+        moviePosterImage = null;
+        movieTitle = null;
+        mProgressBar = null;
     }
 }

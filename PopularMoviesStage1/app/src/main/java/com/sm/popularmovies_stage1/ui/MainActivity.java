@@ -1,16 +1,16 @@
 package com.sm.popularmovies_stage1.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -21,7 +21,6 @@ import com.sm.popularmovies_stage1.model.Movies;
 import com.sm.popularmovies_stage1.model.PopularMoviesDto;
 import com.sm.popularmovies_stage1.model.RetrofitClientInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,22 +29,21 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ProgressDialog progressDoalog;
     GridView gridview;
     Context mContext;
     CustomAdapter mCustomAdapter;
-    private Menu menu;
     MenuItem top;
     MenuItem pop;
     private static final String API_KEY = "YOUR_API_KEY";
+    private static final String TAG = "MainActivity";
     List<Movies> mMoviesList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        gridview = (GridView) findViewById(R.id.gridview);
+        gridview = findViewById(R.id.gridview);
         mContext = this;
-        getMovieList(getPopularMoviewsCall());
+        getMovieList(getPopularMoviesCall());
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
             case R.id.popular_movies:
-                getMovieList(getPopularMoviewsCall());
+                getMovieList(getPopularMoviesCall());
                 top.setVisible(true);
                 pop.setVisible(false);
                 invalidateOptionsMenu();
@@ -91,35 +89,39 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private Call<PopularMoviesDto> getPopularMoviewsCall() {
+    private Call<PopularMoviesDto> getPopularMoviesCall() {
         MoviedbService service = RetrofitClientInstance.getRetrofitInstance().create(MoviedbService.class);
-        Call<PopularMoviesDto> call = service.getPopularMovies(API_KEY);
-        return call;
+        return service.getPopularMovies(API_KEY);
     }
 
     private Call<PopularMoviesDto> getTopRatedMovieCall() {
         MoviedbService service = RetrofitClientInstance.getRetrofitInstance().create(MoviedbService.class);
-        Call<PopularMoviesDto> call = service.getTopRatedMovies(API_KEY);
-        return call;
+        return service.getTopRatedMovies(API_KEY);
     }
 
     private void getMovieList(Call<PopularMoviesDto> call) {
 
         call.enqueue(new Callback<PopularMoviesDto>() {
             @Override
-            public void onResponse(Call<PopularMoviesDto> call, Response<PopularMoviesDto> response) {
+            public void onResponse(@NonNull Call<PopularMoviesDto> call, @NonNull Response<PopularMoviesDto> response) {
                 //progressDoalog.dismiss();
-                mMoviesList = response.body().getmResults();
-                generateDataList(mMoviesList);
+                if (response != null && response.body() != null) {
+                    mMoviesList = response.body().getmResults();
+                    generateDataList(mMoviesList);
+                } else {
+                    Log.d(TAG, "null Popular movies response.");
+                    Toast.makeText(MainActivity.this, R.string.something_wrong, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(Call<PopularMoviesDto> call, Throwable t) {
-                //progressDoalog.dismiss();
-                Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<PopularMoviesDto> call, @NonNull Throwable t) {
+                //progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, R.string.something_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void generateDataList(List<Movies> moviesList) {
         mCustomAdapter = new CustomAdapter(mContext, moviesList);
         gridview.setAdapter(mCustomAdapter);

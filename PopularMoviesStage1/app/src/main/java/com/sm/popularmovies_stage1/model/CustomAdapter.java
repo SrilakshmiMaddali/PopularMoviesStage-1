@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.sm.popularmovies_stage1.R;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,8 +20,8 @@ import java.util.List;
 public class CustomAdapter extends ArrayAdapter<Movies> {
     private List<Movies> mMoviesList;
     private LayoutInflater mInflater;
-    ViewHolder mHolder;
-    Context mContext;
+    private ViewHolder mHolder;
+    private Context mContext;
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
     private static final String TAG = "CustomAdapter";
 
@@ -41,12 +39,13 @@ public class CustomAdapter extends ArrayAdapter<Movies> {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View recordView = convertView;
         if (recordView == null) {
             mHolder = new ViewHolder();
-            Log.d(TAG, mMoviesList.get(position).getmPosterPath().toString());
+            Log.d(TAG, mMoviesList.get(position).getmPosterPath());
             recordView = mInflater.inflate(R.layout.grid_view_item, null);
             mHolder.moviePoster = (ImageView) recordView.findViewById(R.id.poster);
             recordView.setTag(mHolder);
@@ -59,16 +58,15 @@ public class CustomAdapter extends ArrayAdapter<Movies> {
         return recordView;
     }
 
-    private void populateImagePoster(View iview, String Imageurl, final int position) {
+    private void populateImagePoster(View imageView, String imageUrl, final int position) {
         Picasso.with(mContext)
-                .load(Imageurl)
+                .load(imageUrl)
                 .fit()
-                .into((ImageView) iview);
+                .into((ImageView) imageView);
     }
 
 
     private String loadImage(int position) {
-        String url = IMAGE_BASE_URL + mMoviesList.get(position).getmPosterPath();
-        return url;
+        return IMAGE_BASE_URL + mMoviesList.get(position).getmPosterPath();
     }
 }
