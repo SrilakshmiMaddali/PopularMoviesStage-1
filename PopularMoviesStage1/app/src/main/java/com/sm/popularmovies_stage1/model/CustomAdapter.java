@@ -16,11 +16,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * Adapter object to render movies in grid view.
+ */
 public class CustomAdapter extends ArrayAdapter<Movies> {
     private List<Movies> mMoviesList;
     private LayoutInflater mInflater;
     ViewHolder mHolder;
     Context mContext;
+    private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
+    private static final String TAG = "CustomAdapter";
 
 
     private class ViewHolder {
@@ -31,7 +36,7 @@ public class CustomAdapter extends ArrayAdapter<Movies> {
     public CustomAdapter(@NonNull Context context, @NonNull List<Movies> moviesList) {
         super(context, R.layout.grid_view_item, moviesList);
         mContext = context;
-        Log.d("Pavan", moviesList.toString());
+        Log.d(TAG, moviesList.toString());
         mMoviesList = moviesList;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -41,7 +46,7 @@ public class CustomAdapter extends ArrayAdapter<Movies> {
         View recordView = convertView;
         if (recordView == null) {
             mHolder = new ViewHolder();
-            Log.d("Pavan", mMoviesList.get(position).getmPosterPath().toString());
+            Log.d(TAG, mMoviesList.get(position).getmPosterPath().toString());
             recordView = mInflater.inflate(R.layout.grid_view_item, null);
             mHolder.moviePoster = (ImageView) recordView.findViewById(R.id.poster);
             recordView.setTag(mHolder);
@@ -63,7 +68,7 @@ public class CustomAdapter extends ArrayAdapter<Movies> {
 
 
     private String loadImage(int position) {
-        String url = "http://image.tmdb.org/t/p/" + "w500/" + mMoviesList.get(position).getmPosterPath();
+        String url = IMAGE_BASE_URL + mMoviesList.get(position).getmPosterPath();
         return url;
     }
 }
