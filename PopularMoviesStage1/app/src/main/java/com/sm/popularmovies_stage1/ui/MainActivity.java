@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.sm.popularmovies_stage1.BuildConfig;
 import com.sm.popularmovies_stage1.R;
 import com.sm.popularmovies_stage1.model.CustomAdapter;
 import com.sm.popularmovies_stage1.model.MoviedbService;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     CustomAdapter mCustomAdapter;
     MenuItem top;
     MenuItem pop;
-    private static final String API_KEY = "YOUR_API_KEY";
+    private static final String API_KEY = BuildConfig.API_KEY;
     private static final String TAG = "MainActivity";
     List<Movies> mMoviesList;
     @Override
