@@ -127,6 +127,5 @@ public class MainActivity extends AppCompatActivity {
         mCustomAdapter = new CustomAdapter(mContext, moviesList);
         gridview.setAdapter(mCustomAdapter);
         gridview.invalidateViews();
-
     }
 }

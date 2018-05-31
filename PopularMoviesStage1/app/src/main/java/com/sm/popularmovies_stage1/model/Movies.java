@@ -1,5 +1,7 @@
 package com.sm.popularmovies_stage1.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -48,11 +50,10 @@ public class Movies implements Parcelable{
         this.mAdult=adult;
         this.mOverview=overview;
         this.mReleaseDate=releasedate;
-
-
     }
 
-    private Movies(Parcel in) {
+
+    public Movies(Parcel in) {
         this.mVoteCount = in.readInt();
         this.mId = in.readString();
         this.mVideo = in.readString();
